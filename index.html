@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Prep Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="home-page">
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Exam Prep Hub home">
+            <span class="brand-mark">E</span>
+            <span>Exam Prep <strong>Hub</strong></span>
+        </a>
+        <nav class="main-nav" aria-label="Primary navigation">
+            <a class="active" href="index.html"><span aria-hidden="true">🏠</span> Home</a>
+            <a href="subjects.html"><span aria-hidden="true">📚</span> Subjects</a>
+            <a href="materials.html"><span aria-hidden="true">📖</span> Materials</a>
+            <a href="quiz.html"><span aria-hidden="true">📝</span> Quiz</a>
+            <a href="papers.html"><span aria-hidden="true">📄</span> Papers</a>
+            <a href="tips.html"><span aria-hidden="true">💡</span> Tips</a>
+        </nav>
+        <button class="profile-button" type="button" aria-label="Open profile">You <span>↗</span></button>
+    </header>
+
+    <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> Your focused study space</p>
+                <h1 id="hero-title">Prepare smart.<br><em>Score better.</em></h1>
+                <p class="hero-text">Everything you need to move from “I should study” to “I’m ready.” Build momentum with resources designed for exam day.</p>
+                <div class="hero-actions">
+                    <a class="button button-primary" id="start-button" href="#subjects">Start preparing <span>→</span></a>
+                    <a class="text-link" href="#features">See what’s inside <span>↓</span></a>
+                </div>
+            </div>
+            <div class="hero-note" aria-label="Study reminder">
+                <div class="note-top"><span>01</span><span>REMINDER</span></div>
+                <p>Small steps,<br><strong>big results.</strong></p>
+                <span class="note-line"></span>
+                <p class="note-caption">Your next session is<br>already waiting.</p>
+            </div>
+        </section>
+
+        <section class="section-block" id="subjects" aria-labelledby="subjects-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Choose your lane</p>
+                    <h2 id="subjects-title">Explore subjects</h2>
+                </div>
+                <p class="section-intro">Pick a subject and make today’s study session count.</p>
+            </div>
+            <div class="subject-grid">
+                <button class="subject-card card-blue" type="button" data-subject="DBMS"><span class="card-number">01</span><span class="subject-icon">⌘</span><strong>DBMS</strong><small>04 chapters · 28 topics</small><span class="card-arrow">↗</span></button>
+                <button class="subject-card card-yellow" type="button" data-subject="Python"><span class="card-number">02</span><span class="subject-icon">{ }</span><strong>Python</strong><small>06 chapters · 41 topics</small><span class="card-arrow">↗</span></button>
+                <button class="subject-card card-coral" type="button" data-subject="Data Structures"><span class="card-number">03</span><span class="subject-icon">⌁</span><strong>Data Structures</strong><small>05 chapters · 36 topics</small><span class="card-arrow">↗</span></button>
+                <button class="subject-card card-lilac" type="button" data-subject="Computer Networks"><span class="card-number">04</span><span class="subject-icon">◌</span><strong>Computer Networks</strong><small>04 chapters · 24 topics</small><span class="card-arrow">↗</span></button>
+                <button class="subject-card card-mint" type="button" data-subject="Engineering Mathematics"><span class="card-number">05</span><span class="subject-icon">∑</span><strong>Engineering Mathematics</strong><small>08 chapters · 52 topics</small><span class="card-arrow">↗</span></button>
+            </div>
+        </section>
+
+        <section class="feature-band" id="features" aria-labelledby="features-title">
+            <div class="feature-heading">
+                <p class="section-kicker">Your toolkit</p>
+                <h2 id="features-title">Study with<br><em>intention.</em></h2>
+            </div>
+            <div class="feature-list">
+                <article><span>01</span><div><h3>Study materials</h3><p>Clear notes that get to the point.</p></div><b>↗</b></article>
+                <article><span>02</span><div><h3>Previous year questions</h3><p>Practice what has actually appeared.</p></div><b>↗</b></article>
+                <article><span>03</span><div><h3>Online quiz</h3><p>Test your recall and find your gaps.</p></div><b>↗</b></article>
+                <article id="tips"><span>04</span><div><h3>Exam tips</h3><p>Simple strategies for better revision.</p></div><b>↗</b></article>
+            </div>
+        </section>
+
+        <section class="quiz-banner" aria-label="Quick quiz call to action">
+            <div><p class="section-kicker">Ready when you are</p><h2>Got 10 minutes?</h2></div>
+            <p>Take a quick quiz and turn your confidence into a score.</p>
+            <button class="button button-dark" id="quiz-button" type="button">Start a quick quiz <span>→</span></button>
+        </section>
+    </main>
+
+    <footer><span>© 2024 Exam Prep Hub</span><span>Study with purpose.</span></footer>
+    <div class="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Quiz - Exam Prep Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Exam Prep Hub home">
+            <span class="brand-mark">E</span>
+            <span>Exam Prep <strong>Hub</strong></span>
+        </a>
+        <nav class="main-nav" aria-label="Primary navigation">
+            <a href="subjects.html">Subjects</a>
+            <a href="materials.html">Materials</a>
+            <a class="active" href="quiz.html">Quiz</a>
+            <a href="index.html#tips">Exam tips</a>
+        </nav>
+        <a class="profile-button" href="index.html">Home <span>↗</span></a>
+    </header>
+
+    <main>
+        <section class="section-block quiz-section" aria-labelledby="quiz-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Test your recall</p>
+                    <h1 id="quiz-title">Online quiz</h1>
+                </div>
+                <p class="section-intro">One quick question to warm up your study session.</p>
+            </div>
+
+            <form class="quiz-card" id="quiz-form">
+                <p class="card-number">QUESTION 01</p>
+                <h2>Which language is mainly used for web page structure?</h2>
+                <div class="quiz-options">
+                    <label><input type="radio" name="q1" value="HTML"> <span>HTML</span></label>
+                    <label><input type="radio" name="q1" value="Python"> <span>Python</span></label>
+                    <label><input type="radio" name="q1" value="SQL"> <span>SQL</span></label>
+                </div>
+                <button class="button button-dark" type="submit">Submit answer <span>→</span></button>
+                <p class="quiz-result" id="result" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer><span>© 2026 Exam Prep Hub</span><span>Prepare smart. Score better.</span></footer>
+
+    <script>
+        document.querySelector("#quiz-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const answer = document.querySelector('input[name="q1"]:checked');
+            const result = document.querySelector("#result");
+
+            if (!answer) {
+                result.textContent = "Please select an answer.";
+                result.className = "quiz-result is-prompt";
+            } else if (answer.value === "HTML") {
+                result.textContent = "Correct answer!";
+                result.className = "quiz-result is-correct";
+            } else {
+                result.textContent = "Not quite. The correct answer is HTML.";
+                result.className = "quiz-result is-wrong";
+            }
+        });
+    </script>
+</body>
+</html>

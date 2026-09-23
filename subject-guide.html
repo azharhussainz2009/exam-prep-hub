@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Guide - Exam Prep Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Exam Prep Hub home"><span class="brand-mark">E</span><span>Exam Prep <strong>Hub</strong></span></a>
+        <nav class="main-nav" aria-label="Primary navigation">
+            <a href="subjects.html">Subjects</a>
+            <a href="materials.html">Materials</a>
+            <a href="quiz.html">Quiz</a>
+            <a href="papers.html">Papers</a>
+            <a href="tips.html">Tips</a>
+        </nav>
+        <a class="profile-button" href="subjects.html">Subjects <span>↗</span></a>
+    </header>
+
+    <main>
+        <section class="section-block guide-page" aria-labelledby="guide-title">
+            <a class="button guide-back-button" href="subjects.html">← Back to Subjects</a>
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Your preparation guide</p>
+                    <h1 id="guide-title"></h1>
+                </div>
+                <p class="section-intro">A simple plan for understanding the syllabus and preparing confidently.</p>
+            </div>
+            <div class="guide-order" id="study-order"></div>
+            <div class="guide-page-grid" id="guide-sections"></div>
+
+            <section class="chapter-manager" aria-labelledby="chapters-title">
+                <div class="chapter-manager-heading">
+                    <div><p class="section-kicker">Your syllabus</p><h2 id="chapters-title">My Syllabus</h2></div>
+                    <button class="button button-dark" id="add-chapter-button" type="button">+ Add Chapter / Unit</button>
+                </div>
+                <p class="syllabus-note">Add your university syllabus chapters and topics here to create a personalized preparation plan.</p>
+                <form class="inline-editor chapter-form" id="chapter-form" hidden>
+                    <label>Chapter / Unit Name<input name="chapterName" required></label>
+                    <label>Chapter Number <span class="optional">optional</span><input name="chapterNumber" type="number" min="1"></label>
+                    <label>Short Description <span class="optional">optional</span><textarea name="chapterDescription"></textarea></label>
+                    <div class="inline-editor-actions"><button class="button button-dark" type="submit">Save Chapter</button><button class="button inline-cancel" type="button" data-cancel-form>Cancel</button></div>
+                </form>
+                <p class="empty-chapters" id="empty-chapters">No chapters added yet.</p>
+                <div class="chapter-list" id="chapter-list"></div>
+            </section>
+        </section>
+    </main>
+
+    <footer><span>© 2026 Exam Prep Hub</span><span>Prepare smart. Score better.</span></footer>
+
+    <script>
+        const querySubject = new URLSearchParams(window.location.search).get("subject");
+        const storedSubject = (querySubject || localStorage.getItem("selectedSubject") || "DBMS").trim();
+        if (querySubject) localStorage.setItem("selectedSubject", storedSubject);
+        const guides = {
+            DBMS: {
+                order: ["ER Model", "Relational Model", "Keys", "Functional Dependencies", "Normalization", "SQL", "Transactions", "Indexing"],
+                important: ["ER Model", "Relational Model", "Keys", "Functional Dependencies", "Normalization", "SQL", "Transactions", "Indexing"],
+                easy: ["Database basics", "Basic definitions", "Types of keys", "Basic SQL commands"],
+                practice: "Draw ER diagrams, normalize sample tables, write SQL queries and solve transaction schedules."
+            },
+            Python: {
+                order: ["Variables and Data Types", "Operators", "Conditional Statements", "Loops", "Functions", "Lists/Tuples/Sets/Dictionaries", "File Handling", "Exception Handling", "OOP"],
+                important: ["Variables and Data Types", "Operators", "Conditional Statements", "Loops", "Functions", "Lists/Tuples/Sets/Dictionaries", "File Handling", "Exception Handling", "OOP"],
+                easy: ["Basic definitions", "Output tracing", "Simple operators", "Basic loops", "String and list methods"],
+                practice: "Write small programs, predict outputs, debug code and explain functions with examples."
+            },
+            "Data Structures": {
+                order: ["Arrays", "Linked Lists", "Stack", "Queue", "Trees", "Graphs", "Searching", "Sorting", "Hashing"],
+                important: ["Arrays", "Linked Lists", "Stack", "Queue", "Trees", "Graphs", "Searching", "Sorting", "Hashing"],
+                easy: ["Definitions", "LIFO and FIFO", "Array operations", "Tree terminology", "Simple searches"],
+                practice: "Draw structures, trace algorithms, write pseudocode and state time complexity."
+            },
+            "Computer Networks": {
+                order: ["OSI Model", "TCP/IP Model", "Physical/Data Link/Network/Transport layers", "IP Addressing", "Routing", "TCP and UDP", "HTTP", "DNS", "Network Security"],
+                important: ["OSI Model", "TCP/IP Model", "Physical/Data Link/Network/Transport layers", "IP Addressing", "Routing", "TCP and UDP", "HTTP", "DNS", "Network Security"],
+                easy: ["Layer functions", "Protocol expansions", "LAN, MAN and WAN", "TCP versus UDP", "Basic network definitions"],
+                practice: "Draw layer diagrams, compare protocols, solve basic subnetting problems and explain packet flow."
+            },
+            "Operating Systems": {
+                order: ["Introduction to Operating Systems", "Process Management", "Threads", "CPU Scheduling", "Process Synchronization", "Deadlocks", "Memory Management", "Virtual Memory", "File Systems", "Disk Scheduling", "I/O Management", "Protection and Security"],
+                important: ["Process Management", "CPU Scheduling", "Deadlocks", "Memory Management", "Process Synchronization", "Virtual Memory", "File Systems", "Disk Scheduling", "Threads", "I/O Management", "Protection and Security"],
+                easy: ["OS Introduction", "Threads", "I/O Management", "Protection and Security", "Process states"],
+                practice: "Solve CPU scheduling and disk scheduling problems, draw process and memory diagrams, and explain deadlocks, paging and synchronization."
+            }
+        };
+        function getCustomGuide(subjectName, chapters) {
+            const topics = chapters.flatMap((chapter) => chapter.topics || []);
+            const highPriority = topics.filter((topic) => topic.importance === "Very Important").map((topic) => topic.name);
+            const important = topics.filter((topic) => topic.importance === "Important").map((topic) => topic.name);
+            const basic = topics.filter((topic) => topic.importance === "Basic").map((topic) => topic.name);
+            const chapterNames = chapters.map((chapter) => chapter.name);
+            return {
+                order: chapterNames.length ? chapterNames : ["Read the syllabus", "Learn the core concepts", "Practise examples", "Revise with previous questions"],
+                important: highPriority.concat(important, ["Core concepts", "Key definitions", "Important methods or processes"]),
+                easy: basic.concat(["Basic definitions", "Short notes", "Simple examples"]),
+                practice: `Review ${subjectName} concepts, definitions, examples, previous-year questions and practice problems where applicable.`
+            };
+        }
+
+        const subject = storedSubject || "DBMS";
+        const storageKey = "examPrepData";
+        let editingChapterId = null;
+        let editingTopicId = null;
+        let activeChapterId = null;
+        const chapterList = document.querySelector("#chapter-list");
+        const emptyChapters = document.querySelector("#empty-chapters");
+        const chapterForm = document.querySelector("#chapter-form");
+
+        function escapeHtml(value) {
+            return String(value || "").replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character]));
+        }
+
+        function readData() {
+            try {
+                const savedData = JSON.parse(localStorage.getItem(storageKey) || "{}");
+                return savedData && typeof savedData === "object" ? savedData : {};
+            } catch (error) {
+                localStorage.removeItem(storageKey);
+                return {};
+            }
+        }
+
+        function writeData(data) {
+            localStorage.setItem(storageKey, JSON.stringify(data));
+        }
+
+        function getChapters(data) {
+            if (!data[subject]) data[subject] = { chapters: [] };
+            if (!Array.isArray(data[subject].chapters)) data[subject].chapters = [];
+            data[subject].chapters = data[subject].chapters.filter((chapter) => chapter && typeof chapter === "object").map((chapter, index) => ({
+                id: chapter.id || `chapter-${index}-${Date.now()}`,
+                name: String(chapter.name || `Chapter ${index + 1}`),
+                number: chapter.number || "",
+                description: String(chapter.description || ""),
+                topics: Array.isArray(chapter.topics) ? chapter.topics.filter((topic) => topic && typeof topic === "object").map((topic, topicIndex) => ({
+                    id: topic.id || `topic-${index}-${topicIndex}-${Date.now()}`,
+                    name: String(topic.name || `Topic ${topicIndex + 1}`),
+                    description: String(topic.description || ""),
+                    importance: ["Very Important", "Important", "Basic"].includes(topic.importance) ? topic.importance : "Basic"
+                })) : []
+            }));
+            return data[subject].chapters;
+        }
+
+        const initialData = readData();
+        const guide = guides[subject] || getCustomGuide(subject, getChapters(initialData));
+
+        function renderChapters() {
+            const chapters = getChapters(readData());
+            emptyChapters.hidden = chapters.length > 0;
+            chapterList.innerHTML = chapters.map((chapter, chapterIndex) => `
+                <article class="chapter-card" data-chapter-id="${chapter.id}">
+                    <div class="chapter-heading"><div><span class="card-number">${chapter.number ? `CHAPTER ${escapeHtml(chapter.number)}` : `CHAPTER ${chapterIndex + 1}`}</span><h3>${escapeHtml(chapter.name)}</h3><p>${escapeHtml(chapter.description)}</p></div><div class="chapter-actions"><button type="button" data-action="edit-chapter">Edit Chapter</button><button type="button" data-action="delete-chapter">Delete Chapter</button></div></div>
+                    <div class="topic-heading"><strong>Topics</strong><button class="card-action" type="button" data-action="add-topic">+ Add Topic</button></div>
+                    <div class="topic-list">${chapter.topics.length ? chapter.topics.map((topic) => `<div class="topic-item"><div><strong>${escapeHtml(topic.name)}</strong><p>${escapeHtml(topic.description) || "No description added."}</p><span class="importance importance-${topic.importance.toLowerCase().replace(" ", "-")}">${topic.importance === "Very Important" ? "🔴" : topic.importance === "Important" ? "🟡" : "🟢"} ${escapeHtml(topic.importance)}</span></div><div class="topic-actions"><button type="button" data-action="edit-topic" data-topic-id="${topic.id}">Edit Topic</button><button type="button" data-action="delete-topic" data-topic-id="${topic.id}">Delete Topic</button></div></div>`).join("") : `<p class="empty-topics">No topics added yet. Add topics to personalize this chapter.</p>`}</div>
+                    <form class="inline-editor topic-form" data-topic-form="${chapter.id}" hidden><label>Topic Name<input name="topicName" required></label><label>Short Description <span class="optional">optional</span><textarea name="topicDescription"></textarea></label><label>Importance<select name="importance"><option>Very Important</option><option>Important</option><option>Basic</option></select></label><div class="inline-editor-actions"><button class="button button-dark" type="submit">Save Topic</button><button class="button inline-cancel" type="button" data-cancel-form>Cancel</button></div></form>
+                    <div class="chapter-checklist"><strong>Revision Checklist</strong><label><input type="checkbox"> Review chapter notes</label><label><input type="checkbox"> Practise one question</label></div>
+                </article>
+            `).join("");
+        }
+
+        function personalizedTopics(chapters) {
+            return chapters.flatMap((chapter) => chapter.topics).filter(Boolean);
+        }
+
+        function renderGuide() {
+            const chapters = getChapters(readData());
+            const topics = personalizedTopics(chapters);
+            const highPriority = topics.filter((topic) => topic.importance === "Very Important").map((topic) => topic.name);
+            const important = topics.filter((topic) => topic.importance === "Important").map((topic) => topic.name);
+            const basic = topics.filter((topic) => topic.importance === "Basic").map((topic) => topic.name);
+            const firstTopics = highPriority.length ? highPriority : guide.important.slice(0, 3);
+            const nextTopics = important.length ? important : guide.important.slice(3, 6);
+            const availableTopics = basic.length ? basic : guide.easy;
+            const focusTopics = [...new Set([...guide.important, ...topics.map((topic) => topic.name)])];
+            const chapterPlanItems = chapters.length
+                ? chapters.map((chapter) => `${escapeHtml(chapter.name)}${chapter.topics.length ? ` — focus on ${chapter.topics.slice(0, 2).map((topic) => escapeHtml(topic.name)).join(" and ")}` : ""}`)
+                : guide.order;
+            document.title = `${subject} Guide - Exam Prep Hub`;
+            document.querySelector("#guide-title").textContent = `${subject} Preparation Guide`;
+            document.querySelector("#study-order").innerHTML = `<strong>Recommended study order:</strong> ${chapters.length ? chapters.map((chapter) => escapeHtml(chapter.name)).join(" → ") : guide.order.join(" → ")}`;
+            const sections = [
+                ["How to Study This Subject", `Study ${subject} one chapter at a time. Start with the first chapter, make a short note, practise an example and answer one exam-style question before moving ahead.`],
+                ["What Should I Study First?", `<div class="priority-guide"><div class="priority-block priority-high"><strong>🔴 Very Important – Focus on these first</strong><ul>${firstTopics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul></div><div class="priority-block priority-medium"><strong>🟡 Important – Study after the high-priority topics</strong><ul>${nextTopics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul></div><div class="priority-block priority-basic"><strong>🟢 Basic – Study if time is available</strong><ul>${availableTopics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul></div></div>`],
+                ["Topics You Should Not Skip", `<ul>${focusTopics.slice(0, 10).map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul><p>These are useful for prioritizing your preparation; compare them with your university syllabus and past papers.</p>`],
+                ["Easy-to-Prepare Topics", `<ul>${availableTopics.map((topic) => `<li>${escapeHtml(topic)}</li>`).join("")}</ul>`],
+                ["If You Have Less Time", `<div class="time-plan"><div><strong>⏰ 1 DAY PLAN</strong><p>Study Very Important topics first, revise key concepts and practise important question types.</p></div><div><strong>⏰ 3 DAY PLAN</strong><p>Day 1: Very Important topics. Day 2: Important topics. Day 3: Revision and practice.</p></div><div><strong>⏰ 1 WEEK PLAN</strong><p>Distribute chapters across the week, complete high-priority topics first and keep the final day for revision.</p></div></div>`],
+                ["Exam Focus", `<ul><li>Important concepts: ${focusTopics.slice(0, 6).map(escapeHtml).join(", ")}</li><li>Definitions and key terms from each chapter</li><li>Diagrams, formulas or process steps where relevant</li><li>Frequently useful question types and previous questions</li><li>${escapeHtml(guide.practice)}</li></ul>`],
+                ["Chapter-wise Study Plan", `<ol>${chapterPlanItems.map((item) => `<li>${item}</li>`).join("")}</ol>`],
+                ["Most Important Topics", `<p><strong>Very Important:</strong> ${firstTopics.map(escapeHtml).join(", ")}</p><p><strong>Important:</strong> ${nextTopics.map(escapeHtml).join(", ")}</p><p><strong>Basic:</strong> ${availableTopics.map(escapeHtml).join(", ")}</p>`],
+                ["Question Preparation", "For 2-mark questions, learn definitions and differences. For 5-mark questions, practise structured explanations and diagrams. For 10-mark questions, write a clear introduction, headings, examples and a conclusion."],
+                ["What to Practice", `${guide.practice}${topics.length ? ` Include your added topics: ${topics.map((topic) => escapeHtml(topic.name)).join(", ")}.` : ""}`],
+                ["Last-Minute Revision", "Review definitions, important diagrams, formulas or syntax. Recheck your Very Important topics, solve previous-year questions and practise one long answer under time pressure."],
+                ["Exam Preparation Strategy", "Use high-priority preparation first, then cover the remaining chapters. Do not assume an exact syllabus: compare this guide with your university notes and past papers."],
+                ["Exam Writing Tips", "Use headings, underline keywords and show all working steps. Add a neat diagram, code sample, query or example when it supports the answer. Focus on clear, complete explanations rather than guaranteed outcomes."]
+            ];
+            document.querySelector("#guide-sections").innerHTML = sections.map(([title, content]) => `<article class="guide-card"><h2>${title}</h2>${content.startsWith("<") ? content : `<p>${content}</p>`}</article>`).join("");
+        }
+
+        document.querySelector("#add-chapter-button").addEventListener("click", () => {
+            chapterForm.reset();
+            editingChapterId = null;
+            chapterForm.hidden = false;
+            chapterForm.elements.chapterName.focus();
+        });
+
+        document.addEventListener("click", (event) => {
+            if (event.target.matches("[data-cancel-form]")) {
+                event.target.closest("form").hidden = true;
+                editingChapterId = null;
+                editingTopicId = null;
+            }
+        });
+
+        chapterForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const data = readData();
+            const chapters = getChapters(data);
+            const values = { name: chapterForm.elements.chapterName.value.trim(), number: chapterForm.elements.chapterNumber.value.trim(), description: chapterForm.elements.chapterDescription.value.trim() };
+            if (editingChapterId) Object.assign(chapters.find((chapter) => chapter.id === editingChapterId), values);
+            else chapters.push({ id: `chapter-${Date.now()}`, ...values, topics: [] });
+            writeData(data); chapterForm.hidden = true; renderChapters(); renderGuide();
+        });
+        chapterList.addEventListener("click", (event) => {
+            const button = event.target.closest("[data-action]");
+            if (!button) return;
+            const card = button.closest("[data-chapter-id]");
+            const data = readData();
+            const chapter = getChapters(data).find((item) => item.id === card.dataset.chapterId);
+            if (button.dataset.action === "add-topic") { const form = card.querySelector(".topic-form"); form.reset(); form.hidden = false; editingTopicId = null; form.elements.topicName.focus(); }
+            if (button.dataset.action === "edit-chapter") { editingChapterId = chapter.id; chapterForm.elements.chapterName.value = chapter.name; chapterForm.elements.chapterNumber.value = chapter.number || ""; chapterForm.elements.chapterDescription.value = chapter.description || ""; chapterForm.hidden = false; chapterForm.elements.chapterName.focus(); }
+            if (button.dataset.action === "delete-chapter" && confirm("Delete this chapter and all its topics?")) { data[subject].chapters = data[subject].chapters.filter((item) => item.id !== chapter.id); writeData(data); renderChapters(); renderGuide(); }
+            if (button.dataset.action === "edit-topic") { const form = card.querySelector(".topic-form"); editingTopicId = button.dataset.topicId; const topic = chapter.topics.find((item) => item.id === editingTopicId); form.elements.topicName.value = topic.name; form.elements.topicDescription.value = topic.description || ""; form.elements.importance.value = topic.importance; form.hidden = false; form.elements.topicName.focus(); }
+            if (button.dataset.action === "delete-topic" && confirm("Delete this topic?")) { chapter.topics = chapter.topics.filter((topic) => topic.id !== button.dataset.topicId); writeData(data); renderChapters(); renderGuide(); }
+        });
+        chapterList.addEventListener("submit", (event) => {
+            const form = event.target.closest(".topic-form");
+            if (!form) return;
+            event.preventDefault();
+            const data = readData();
+            const chapter = getChapters(data).find((item) => item.id === form.dataset.topicForm);
+            const values = { name: form.elements.topicName.value.trim(), description: form.elements.topicDescription.value.trim(), importance: form.elements.importance.value };
+            if (editingTopicId) Object.assign(chapter.topics.find((topic) => topic.id === editingTopicId), values);
+            else chapter.topics.push({ id: `topic-${Date.now()}`, ...values });
+            writeData(data); form.hidden = true; editingTopicId = null; renderChapters(); renderGuide();
+        });
+        renderChapters();
+        renderGuide();
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects - Exam Prep Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .subjects-heading-tools { align-items: end; display: flex; flex-direction: column; gap: 14px; }
+        .add-subject-form { background: #e8eee9; display: grid; gap: 12px; grid-template-columns: 1.4fr 1fr .7fr auto; margin: 0 0 28px; padding: 18px; }
+        .add-subject-form label { color: var(--ink); display: grid; font-size: 10px; font-weight: 700; gap: 7px; }
+        .add-subject-form input { background: var(--paper); border: 1px solid var(--line); color: var(--ink); font: inherit; font-size: 12px; min-width: 0; padding: 10px; }
+        .add-subject-actions { align-items: end; display: flex; gap: 8px; }
+        .add-subject-actions .button { padding: 11px 14px; }
+        .subject-form-cancel { background: transparent; border: 1px solid var(--line); color: var(--ink); cursor: pointer; }
+        .subject-topics { line-height: 1.45; min-height: 45px; }
+        .subject-card { min-height: 285px; }
+        .custom-subject-card { min-height: 250px; }
+        .custom-subject-card .subject-card-actions { align-items: center; bottom: 18px; display: flex; gap: 12px; left: 21px; position: absolute; }
+        .custom-subject-card .card-action { margin-top: 0; }
+        .custom-subject-card .manage-action { background: transparent; border: 0; border-bottom: 1px solid currentColor; color: #a05245; cursor: pointer; font-size: 10px; padding: 0 0 4px; }
+        @media (max-width: 700px) { .subjects-heading-tools { align-items: start; }.add-subject-form { grid-template-columns: 1fr; }.add-subject-actions { align-items: stretch; }.custom-subject-card .subject-card-actions { left: 16px; } }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html" aria-label="Exam Prep Hub home">
+            <span class="brand-mark">E</span>
+            <span>Exam Prep <strong>Hub</strong></span>
+        </a>
+        <nav class="main-nav" aria-label="Primary navigation">
+            <a class="active" href="subjects.html">Subjects</a>
+            <a href="materials.html">Materials</a>
+        </nav>
+        <a class="profile-button" href="index.html">Home <span>↗</span></a>
+    </header>
+
+    <main>
+        <section class="section-block" aria-labelledby="subjects-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-kicker">Build your foundation</p>
+                    <h1 id="subjects-title">Explore subjects</h1>
+                </div>
+                <div class="subjects-heading-tools">
+                    <p class="section-intro">Choose a subject and make today’s study session count.</p>
+                    <button class="button button-dark" id="add-subject-button" type="button">+ Add Subject</button>
+                </div>
+            </div>
+
+            <form class="add-subject-form" id="add-subject-form" hidden>
+                <label>Subject Name<input name="subjectName" type="text" placeholder="e.g. Operating Systems" required></label>
+                <label>Subject Code <span>(optional)</span><input name="subjectCode" type="text" placeholder="e.g. CS401"></label>
+                <label>Number of Units <span>(optional)</span><input name="unitCount" type="number" min="1" placeholder="6"></label>
+                <div class="add-subject-actions"><button class="button button-dark" type="submit">Save Subject</button><button class="button subject-form-cancel" id="cancel-subject-button" type="button">Cancel</button></div>
+            </form>
+
+            <div class="subject-grid" id="subject-grid">
+                <button class="subject-card card-blue" type="button" onclick="openSubject('DBMS')">
+                    <span class="card-number">01</span>
+                    <span class="subject-icon" aria-hidden="true">⌘</span>
+                    <strong>DBMS</strong>
+                    <small>Database concepts, SQL and ER diagrams.</small>
+                    <small class="subject-topics">Topics: ER Model, Relational Model, Keys, Functional Dependencies, Normalization, SQL, Transactions, Indexing.</small>
+                    <span class="card-action">Open Guide <span>→</span></span>
+                </button>
+                <button class="subject-card card-yellow" type="button" onclick="openSubject('Python')">
+                    <span class="card-number">02</span>
+                    <span class="subject-icon" aria-hidden="true">{ }</span>
+                    <strong>Python</strong>
+                    <small>Programming fundamentals and practice programs.</small>
+                    <small class="subject-topics">Topics: Variables, Data Types, Conditions, Loops, Functions, Lists, Tuples, Sets, Dictionaries, File Handling, Exceptions, OOP.</small>
+                    <span class="card-action">Open Guide <span>→</span></span>
+                </button>
+                <button class="subject-card card-coral" type="button" onclick="openSubject('Data Structures')">
+                    <span class="card-number">03</span>
+                    <span class="subject-icon" aria-hidden="true">⌁</span>
+                    <strong>Data Structures</strong>
+                    <small>Arrays, stacks, queues, trees and graphs.</small>
+                    <small class="subject-topics">Topics: Arrays, Linked Lists, Stack, Queue, Trees, Graphs, Searching, Sorting, Hashing.</small>
+                    <span class="card-action">Open Guide <span>→</span></span>
+                </button>
+                <button class="subject-card card-lilac" type="button" onclick="openSubject('Computer Networks')">
+                    <span class="card-number">04</span>
+                    <span class="subject-icon" aria-hidden="true">◌</span>
+                    <strong>Computer Networks</strong>
+                    <small>Networking concepts, layers and protocols.</small>
+                    <small class="subject-topics">Topics: OSI Model, TCP/IP, IP Addressing, Routing, TCP, UDP, HTTP, DNS, Network Security.</small>
+                    <span class="card-action">Open Guide <span>→</span></span>
+                </button>
+                <button class="subject-card card-mint" type="button" onclick="openSubject('Operating Systems')">
+                    <span class="card-number">05</span>
+                    <span class="subject-icon" aria-hidden="true">◒</span>
+                    <strong>Operating Systems</strong>
+                    <small>Processes, memory, scheduling and file systems.</small>
+                    <small class="subject-topics">Topics: Processes, Threads, CPU Scheduling, Synchronization, Deadlocks, Memory Management, Virtual Memory, File Systems, Disk Scheduling, I/O, Security.</small>
+                    <span class="card-action">Open Guide <span>→</span></span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer><span>© 2026 Exam Prep Hub</span><span>Prepare smart. Score better.</span></footer>
+
+    <script>
+        const customSubjectKey = "examPrepHubCustomSubjects";
+        const subjectGrid = document.querySelector("#subject-grid");
+        const addSubjectButton = document.querySelector("#add-subject-button");
+        const addSubjectForm = document.querySelector("#add-subject-form");
+        let editingSubjectId = null;
+
+        function escapeHtml(value) {
+            return String(value || "").replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[character]));
+        }
+
+        function getCustomSubjects() {
+            try {
+                const subjects = JSON.parse(localStorage.getItem(customSubjectKey) || "[]");
+                return Array.isArray(subjects) ? subjects : [];
+            } catch (error) {
+                localStorage.removeItem(customSubjectKey);
+                return [];
+            }
+        }
+
+        function saveCustomSubjects(subjects) {
+            localStorage.setItem(customSubjectKey, JSON.stringify(subjects));
+        }
+
+        function openCustomSubject(subjectName) {
+            localStorage.setItem("selectedSubject", subjectName);
+            window.location.href = `subject-guide.html?subject=${encodeURIComponent(subjectName)}`;
+        }
+
+        function renderCustomSubjects() {
+            subjectGrid.querySelectorAll(".custom-subject-card").forEach((card) => card.remove());
+            getCustomSubjects().forEach((subject, index) => {
+                const card = document.createElement("article");
+                card.className = `subject-card custom-subject-card card-${["mint", "blue", "yellow", "coral", "lilac"][index % 5]}`;
+                card.innerHTML = `<span class="card-number">${String(index + 5).padStart(2, "0")}</span><span class="subject-icon" aria-hidden="true">＋</span><strong>${escapeHtml(subject.name)}</strong><small>${subject.code ? `${escapeHtml(subject.code)} · ` : ""}${subject.units ? `${escapeHtml(subject.units)} units` : "Custom syllabus subject"}</small><small class="subject-topics">Topics: Add and manage topics for ${escapeHtml(subject.name)} in its guide.</small><div class="subject-card-actions"><button class="card-action" type="button" data-action="open" data-id="${subject.id}">Open Guide <span>→</span></button><button class="manage-action" type="button" data-action="edit" data-id="${subject.id}">Edit</button><button class="manage-action" type="button" data-action="delete" data-id="${subject.id}">Delete</button></div>`;
+                subjectGrid.appendChild(card);
+            });
+        }
+
+        addSubjectButton.addEventListener("click", () => {
+            addSubjectForm.hidden = !addSubjectForm.hidden;
+            if (!addSubjectForm.hidden) addSubjectForm.elements.subjectName.focus();
+        });
+
+        document.querySelector("#cancel-subject-button").addEventListener("click", () => {
+            editingSubjectId = null;
+            addSubjectForm.reset();
+            addSubjectForm.hidden = true;
+        });
+
+        addSubjectForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const subjects = getCustomSubjects();
+            const values = { name: addSubjectForm.elements.subjectName.value.trim(), code: addSubjectForm.elements.subjectCode.value.trim(), units: addSubjectForm.elements.unitCount.value.trim() };
+            if (!values.name) return;
+            if (editingSubjectId) {
+                const subject = subjects.find((item) => item.id === editingSubjectId);
+                if (subject) Object.assign(subject, values);
+            } else {
+                subjects.push({ id: `custom-${Date.now()}`, ...values });
+            }
+            saveCustomSubjects(subjects);
+            editingSubjectId = null;
+            addSubjectForm.reset();
+            addSubjectForm.hidden = true;
+            renderCustomSubjects();
+        });
+
+        subjectGrid.addEventListener("click", (event) => {
+            const action = event.target.closest("[data-action]");
+            if (!action) return;
+            const subject = getCustomSubjects().find((item) => item.id === action.dataset.id);
+            if (!subject) return;
+            if (action.dataset.action === "open") openCustomSubject(subject.name);
+            if (action.dataset.action === "edit") {
+                editingSubjectId = subject.id;
+                addSubjectForm.elements.subjectName.value = subject.name;
+                addSubjectForm.elements.subjectCode.value = subject.code || "";
+                addSubjectForm.elements.unitCount.value = subject.units || "";
+                addSubjectForm.hidden = false;
+                addSubjectForm.elements.subjectName.focus();
+            }
+            if (action.dataset.action === "delete" && window.confirm(`Delete ${subject.name}?`)) {
+                saveCustomSubjects(getCustomSubjects().filter((item) => item.id !== subject.id));
+                renderCustomSubjects();
+            }
+        });
+
+        function openSubject(subjectName) {
+            localStorage.setItem("selectedSubject", subjectName);
+            window.location.href = `subject-guide.html?subject=${encodeURIComponent(subjectName)}`;
+        }
+
+        renderCustomSubjects();
+    </script>
+</body>
+</html>
